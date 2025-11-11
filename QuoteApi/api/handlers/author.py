@@ -14,7 +14,7 @@ def create_author():
         db.session.commit()
     except TypeError:
         abort(400, f"Invalid data. Required: <name>. Received: {', '.join(author_data.keys())}")
-    except Exception as e:
+    except Exception as e:  
         abort(503, f"Database error: {str(e)}")
     return jsonify(author.to_dict()), 201
 
@@ -36,3 +36,15 @@ def author_quotes(author_id: int):
         return jsonify(new_quote.to_dict() | { "author_id" : author.id}), 201
     else:
         abort(405)
+
+
+@app.get("/get_authors")
+def get_authors():
+    authors_db = db.session.scalars(db.select(AuthorModel)).all()
+    # Формируем список словарей
+    authors = []
+    for author in authors_db:
+        authors.append(author.to_dict())
+    return jsonify(authors), 200
+
+

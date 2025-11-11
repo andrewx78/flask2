@@ -1,6 +1,7 @@
 from api import db
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import String
+# from api.models.quote import QuoteModel
 
 
 class AuthorModel(db.Model):
