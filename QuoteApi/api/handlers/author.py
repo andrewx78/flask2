@@ -47,4 +47,8 @@ def get_authors():
         authors.append(author.to_dict())
     return jsonify(authors), 200
 
-
+@app.get("/authors/<int:author_id>")
+def get_author_by_id(author_id: int):
+    author = db.get_or_404(AuthorModel, author_id, description=f'Author with id={author_id} not found')
+    # instance -> dict -> json
+    return jsonify(author.to_dict()), 200
