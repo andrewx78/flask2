@@ -21,4 +21,4 @@ ma = Marshmallow()
 ma.init_app(app)
 
 #DONE. Обязаткельно добавить импорт для обработчиков author и quote
-from api.handlers import author, quote
+from api.handlers import author, quote, user
