@@ -19,3 +19,9 @@ class AuthorModel(db.Model):
     def to_dict(self):
         return {"id": self.id, "name": self.name, "surname": self.surname}
     
+    def __str__(self):
+        repr(self)
+
+    def __repr__(self):
+        return f'Author({self.name, self.surname})'
+    

@@ -4,20 +4,27 @@ from api.models.author import AuthorModel
 from api.models.quote import QuoteModel
 from sqlalchemy.exc import SQLAlchemyError
 from api.schemas.author import author_schema, authors_schema
+from marshmallow import ValidationError
 
 @app.post("/authors")
 def create_author():
-    author_data = request.json
     # add_to_db(AuthorModel, author_data)  # Variant 2
     try:
-        author = AuthorModel(**author_data)
+        # 1 Get raw bites
+        #print(request.data)
+        # 2 Load bytes to dict
+        #author_data = author_schema.loads(request.data)
+        # 3 Create new AuthorModel instance via dict
+        #author = AuthorModel(**author_data)
+        author = author_schema.loads(request.data) # get_data() return raw bytes
+
         db.session.add(author)
         db.session.commit()
-    except TypeError:
-        abort(400, f"Invalid data. Required: <name>. Received: {', '.join(author_data.keys())}")
+    except ValidationError as ve:
+        abort(400, f"Validation error: {str(ve)}")
     except Exception as e:  
         abort(503, f"Database error: {str(e)}")
-    return jsonify(author.to_dict()), 201
+    return jsonify(author_schema.dump(author)), 201
 
 
 # URL: "/authors/<int:author_id>/quotes"
@@ -49,7 +56,8 @@ def get_authors():
 def get_author_by_id(author_id: int):
     author = db.get_or_404(AuthorModel, author_id, description=f'Author with id={author_id} not found')
     # instance -> dict -> json
-    return jsonify(author.to_dict()), 200
+    #return jsonify(author.to_dict()), 200
+    return jsonify(author_schema.dump(author)), 200
 
 
 #TODO
