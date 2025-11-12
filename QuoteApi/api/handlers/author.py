@@ -3,6 +3,7 @@ from flask import request, abort, jsonify
 from api.models.author import AuthorModel
 from api.models.quote import QuoteModel
 from sqlalchemy.exc import SQLAlchemyError
+from api.schemas.author import author_schema, authors_schema
 
 @app.post("/authors")
 def create_author():
@@ -41,11 +42,8 @@ def author_quotes(author_id: int):
 @app.get("/get_authors")
 def get_authors():
     authors_db = db.session.scalars(db.select(AuthorModel)).all()
-    # Формируем список словарей
-    authors = []
-    for author in authors_db:
-        authors.append(author.to_dict())
-    return jsonify(authors), 200
+    return authors_schema.dump(authors_db), 200
+
 
 @app.get("/authors/<int:author_id>")
 def get_author_by_id(author_id: int):
