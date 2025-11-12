@@ -93,7 +93,7 @@ def update_author_name_surname(author_id):
             setattr(author, key_as_attr, value)
 
         db.session.commit()
-        return jsonify(author.to_dict()), 200
+        return jsonify(author_schema.dump(author)), 200
     except SQLAlchemyError as e:
         db.session.rollback()
         abort (503, f"Database error: {str(e)}")

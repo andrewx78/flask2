@@ -16,8 +16,8 @@ class AuthorModel(db.Model):
         self.name = name
         self.surname = surname
 
-    def to_dict(self):
-        return {"id": self.id, "name": self.name, "surname": self.surname}
+    #def to_dict(self):
+    #    return {"id": self.id, "name": self.name, "surname": self.surname}
     
     def __str__(self):
         repr(self)
