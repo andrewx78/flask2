@@ -3,8 +3,8 @@ from flask import request, abort, jsonify
 from api.models.author import AuthorModel
 from api.models.quote import QuoteModel
 from sqlalchemy.exc import SQLAlchemyError
-from api.schemas.author import author_schema, authors_schema
-from marshmallow import ValidationError
+from api.schemas.author import author_schema, authors_schema, change_author_schema
+from marshmallow import ValidationError, EXCLUDE
 
 @app.post("/authors")
 def create_author():
@@ -78,7 +78,10 @@ def delete_author(author_id):
 
 @app.route("/authors/<int:author_id>", methods=['PUT'])
 def update_author_name_surname(author_id):
-    new_data = request.json
+    try:
+        new_data = change_author_schema.load(request.json, unknown=EXCLUDE)
+    except ValidationError as ve:
+        return abort(400, f"No valid data to update: {str(ve)}")
 
     if not new_data:
         return abort(400, "Invalid data")
@@ -87,8 +90,6 @@ def update_author_name_surname(author_id):
 
     try:
         for key_as_attr, value in new_data.items():
-            if not hasattr(author, key_as_attr):
-                raise Exception(f"Invalid key={key_as_attr}. Valid only {tuple(vars(author).keys())}")
             setattr(author, key_as_attr, value)
 
         db.session.commit()

@@ -14,3 +14,4 @@ class AuthorSchema(ma.SQLAlchemyAutoSchema):
 
 author_schema = AuthorSchema()
 authors_schema = AuthorSchema(many=True)
+change_author_schema = AuthorSchema(load_instance=False, partial=True)
