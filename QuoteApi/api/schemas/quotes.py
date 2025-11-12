@@ -2,7 +2,7 @@ from api import ma
 from api.models.quote import QuoteModel
 from api.schemas.author import AuthorSchema
 from marshmallow import EXCLUDE
-from marshmallow.validate import Length
+from marshmallow.validate import Length, Range
 
 
 #Example of custom validator
@@ -23,7 +23,7 @@ class QuoteSchema(ma.SQLAlchemySchema):
     text = ma.auto_field(required=True, validate=Length(min=3))
     author_id = ma.auto_field()
     author = ma.Nested(AuthorSchema(only=("id", "name", "surname")))
-    rating = ma.Integer(strict=True, validate=rating_validate)
+    rating = ma.Integer(strict=True, validate=Range(1, 6))
 
 
 quote_schema = QuoteSchema(exclude=["author_id"])
