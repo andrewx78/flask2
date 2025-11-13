@@ -1,4 +1,4 @@
-from api import app, db, auth
+from api import app, db, multi_auth
 from flask import abort, jsonify, request
 from api.models.quote import QuoteModel
 from api.models.author import AuthorModel
@@ -84,10 +84,10 @@ def filter_quotes():
 
 # URL: "/authors/<int:author_id>/quotes"
 @app.route("/authors/<int:author_id>/quotes", methods=["GET", "POST"])
-@auth.login_required
+@multi_auth.login_required
 def author_quotes(author_id: int):
     print("user =", auth.current_user())
-    
+
     author = db.get_or_404(AuthorModel, author_id, description=f"Author with id={author_id} not found")
 
     if request.method == "GET":

@@ -20,8 +20,8 @@ migrate = Migrate(app, db)
 ma = Marshmallow()
 ma.init_app(app)
 
-basic_auth = HTTPBasicAuth(app)
-token_auth = HTTPTokenAuth(app)
+basic_auth = HTTPBasicAuth()
+token_auth = HTTPTokenAuth("Bearer")
 multi_auth = MultiAuth(basic_auth, token_auth)
 
 @basic_auth.verify_password
