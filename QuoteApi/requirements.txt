@@ -24,6 +24,7 @@ marshmallow==4.1.0
 marshmallow-sqlalchemy==1.4.2
 passlib==1.7.4
 Pygments==2.19.2
+PyJWT==2.10.1
 python-dotenv==1.2.1
 pyxdg==0.28
 requests==2.32.5
