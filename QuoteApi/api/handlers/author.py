@@ -1,4 +1,4 @@
-from api import app, db
+from api import app, db, auth
 from flask import request, abort, jsonify
 from api.models.author import AuthorModel
 from api.models.quote import QuoteModel
@@ -7,6 +7,7 @@ from api.schemas.author import author_schema, authors_schema, change_author_sche
 from marshmallow import ValidationError, EXCLUDE
 
 @app.post("/authors")
+@auth.login_required
 def create_author():
     # add_to_db(AuthorModel, author_data)  # Variant 2
     try:
@@ -45,6 +46,7 @@ def get_author_by_id(author_id: int):
 #TODO
 
 @app.route("/authors/<int:author_id>", methods=['DELETE'])
+@auth.login_required
 def delete_author(author_id):
     author = db.get_or_404(entity=AuthorModel, ident=author_id, description=f"Author with id={author_id} not found")
     db.session.delete(author)
@@ -59,6 +61,7 @@ def delete_author(author_id):
 
 
 @app.route("/authors/<int:author_id>", methods=['PUT'])
+@auth.login_required
 def update_author_name_surname(author_id):
     try:
         new_data = change_author_schema.load(request.json, unknown=EXCLUDE)
