@@ -1,4 +1,4 @@
-from apiflask import APIFlask, Schema, HTTPError
+from apiflask import APIFlask, EmptySchema, Schema, HTTPError
 from apiflask.fields import Integer, String
 from apiflask. validators import Length, OneOf
 
@@ -52,3 +52,9 @@ def create_pet(pet):
     print(pet, type(pet))
     pet.update({"id": 101})
     return pet
+
+@app.delete("/pets/<int:pet_id>")
+@app.output(EmptySchema, status_code=204)
+def delete_pet_by_id(pet_id: int):
+    """ empty schema """
+    return ""
