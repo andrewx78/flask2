@@ -6,7 +6,7 @@ import sqlalchemy as sa
 from sqlalchemy.exc import SQLAlchemyError, IntegrityError
 
 class UserModel(db.Model):
-    __tablename__ = "users"
+    __tablename__ = "user_model"
 
 
     id: so.Mapped[int] = so.mapped_column(primary_key=True)
@@ -28,9 +28,9 @@ class UserModel(db.Model):
         try:
             db.session.add(self)
             db.session.commit()
-        except InterruptedError as e:
+        except IntegrityError as e:
             db.session.rollback()
-            abort(400, f"Database integrity error: {str(e)}")
+            abort(400, f"Database integrity error: username {self.username} already exists")
         except SQLAlchemyError as e:
             db.session.rollback()
             abort(503, f"Database error: {str(e)}")
